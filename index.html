@@ -553,66 +553,6 @@
         transition: width 0.05s;
       }
 
-      /* ── SKIP / BLOW BUTTON ── */
-      #skip-btn {
-        display: none; /* shown via JS after candles lit */
-        position: fixed;
-        bottom: clamp(14px, 3.5vh, 52px);
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: clamp(10px, 2vmin, 18px);
-        padding: clamp(10px, 1.8vmin, 14px) clamp(24px, 4vmin, 36px);
-        background: rgba(255, 220, 100, 0.13);
-        border: 1px solid rgba(255, 220, 100, 0.45);
-        color: #ffe066;
-        font-family: "Lato", sans-serif;
-        font-size: clamp(11px, 1.8vmin, 14px);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        border-radius: 30px;
-        white-space: nowrap;
-        z-index: 55;
-        opacity: 0;
-        pointer-events: none;
-        transition:
-          opacity 1.2s ease,
-          background 0.25s;
-      }
-      #skip-btn.show {
-        opacity: 1;
-        pointer-events: auto;
-      }
-      #skip-btn:active {
-        background: rgba(255, 220, 100, 0.28);
-      }
-
-      #mic-btn {
-        display: none;
-        position: fixed;
-        bottom: clamp(90px, 16vh, 140px);
-        left: 50%;
-        transform: translateX(-50%);
-        padding: clamp(9px, 1.6vmin, 13px) clamp(20px, 3.5vmin, 30px);
-        background: rgba(255, 220, 100, 0.14);
-        border: 1px solid rgba(255, 220, 100, 0.5);
-        color: #ffe066;
-        font-size: clamp(11px, 1.8vmin, 14px);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        cursor: pointer;
-        border-radius: 30px;
-        transition: background 0.3s;
-        z-index: 55;
-        white-space: nowrap;
-      }
-      #mic-btn:hover {
-        background: rgba(255, 220, 100, 0.26);
-      }
-      #mic-btn:active {
-        background: rgba(255, 220, 100, 0.38);
-      }
-
       /* push blow bar up to make room for skip button */
       #blow-ui {
         bottom: clamp(70px, 12vh, 120px);
@@ -646,11 +586,41 @@
         opacity: 1;
         pointer-events: auto;
       }
+      #skip-btn.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
       #skip-btn:hover {
         background: rgba(255, 220, 100, 0.22);
       }
       #skip-btn:active {
         background: rgba(255, 220, 100, 0.32);
+      }
+
+      #mic-btn {
+        display: none;
+        position: fixed;
+        bottom: clamp(90px, 16vh, 140px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: clamp(9px, 1.6vmin, 13px) clamp(20px, 3.5vmin, 30px);
+        background: rgba(255, 220, 100, 0.14);
+        border: 1px solid rgba(255, 220, 100, 0.5);
+        color: #ffe066;
+        font-size: clamp(11px, 1.8vmin, 14px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 30px;
+        transition: background 0.3s;
+        z-index: 55;
+        white-space: nowrap;
+      }
+      #mic-btn:hover {
+        background: rgba(255, 220, 100, 0.26);
+      }
+      #mic-btn:active {
+        background: rgba(255, 220, 100, 0.38);
       }
 
       #title {
