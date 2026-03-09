@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Happy Birthday! 🎂</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Lato:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ═══════════════════════════════════════════════════
+   All cake sizing uses vmin so it scales on every
+   screen — phone, tablet, desktop, landscape, etc.
+   vmin = min(vw, vh), so cake always fits the
+   smaller dimension and never overflows.
+═══════════════════════════════════════════════════ */
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --g: 0;
+      } /* --g = glow level 0..1 */
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        font-family: "Lato", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+      }
+
+      /* ── SCENE ── */
+      #scene {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        /* cake sits above the table; table is 30vh tall */
+        padding-bottom: 30vh;
+        background: radial-gradient(
+          ellipse at 50% 62%,
+          rgba(255, 160, 50, calc(var(--g) * 0.34)) 0%,
+          rgba(180, 80, 10, calc(var(--g) * 0.22)) 32%,
+          #000 68%
+        );
+      }
+
+      /* ── VIGNETTE ── */
+      #vig {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: radial-gradient(
+          ellipse at 50% 52%,
+          transparent 12%,
+          #000 74%
+        );
+        opacity: calc(1 - var(--g) * 0.74);
+        transition: opacity 1s;
+      }
+
+      /* ── TABLE ── */
+      #table {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30vh;
+        background: linear-gradient(180deg, #1c0e06, #090503);
+        border-top: 2px solid #3a1f08;
+        box-shadow: 0 -2vmin 8vmin rgba(0, 0, 0, 0.9);
+        z-index: 5;
+      }
+      #table::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 150, 50, calc(var(--g) * 0.22)),
+          transparent
+        );
+      }
+
+      /* ══════════════════════════════════
+   CAKE — all sizes in vmin
+   On a 1080p desktop  1vmin = 10.8px
+   On a 390px iPhone   1vmin = 3.9px
+   → cake always fits perfectly
+══════════════════════════════════ */
+
+      #cake-wrap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5vmin; /* small gap between cake base and table top */
+        z-index: 10;
+        filter: drop-shadow(
+          0 0 calc(var(--g) * 7vmin) rgba(255, 155, 50, 0.55)
+        );
+        transition: filter 0.8s;
+      }
+
+      /* plate */
+      #plate {
+        width: 30vmin;
+        height: 2.2vmin;
+        background: linear-gradient(180deg, #ede0cc, #cbc0a2);
+        border-radius: 50%;
+        box-shadow: 0 0.6vmin 3vmin rgba(0, 0, 0, 0.65);
+        margin-top: -0.5vmin;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* tiers */
+      #cake {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .tier {
+        position: relative;
+      }
+
+      #tier1 {
+        width: 28vmin;
+        height: 11vmin;
+        background: linear-gradient(180deg, #c0392b, #8e1f14);
+        border-radius: 1.6vmin 1.6vmin 1vmin 1vmin;
+        box-shadow:
+          inset 0 0.4vmin 0.8vmin rgba(255, 255, 255, 0.12),
+          0 0.8vmin 3vmin rgba(0, 0, 0, 0.55);
+      }
+      #tier2 {
+        width: 22vmin;
+        height: 9.5vmin;
+        margin-top: -0.3vmin;
+        background: linear-gradient(180deg, #e67e22, #c06010);
+        border-radius: 1.4vmin 1.4vmin 0.8vmin 0.8vmin;
+        box-shadow:
+          inset 0 0.4vmin 0.8vmin rgba(255, 255, 255, 0.12),
+          0 0.6vmin 2.5vmin rgba(0, 0, 0, 0.45);
+      }
+      #tier3 {
+        width: 15vmin;
+        height: 7.5vmin;
+        margin-top: -0.3vmin;
+        background: linear-gradient(180deg, #f39c12, #c87d0a);
+        border-radius: 1.4vmin 1.4vmin 0.8vmin 0.8vmin;
+        box-shadow:
+          inset 0 0.4vmin 0.8vmin rgba(255, 255, 255, 0.12),
+          0 0.5vmin 2vmin rgba(0, 0, 0, 0.45);
+        position: relative;
+      }
+
+      /* frosting drips */
+      .frost {
+        position: absolute;
+        top: -1.1vmin;
+        left: 0;
+        right: 0;
+        height: 2.2vmin;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.93),
+          rgba(255, 255, 255, 0.42)
+        );
+        border-radius: 0.5vmin 0.5vmin 50% 50%;
+        z-index: 2;
+      }
+      .frost::before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 1.4vmin;
+        background: rgba(255, 255, 255, 0.87);
+        clip-path: polygon(
+          0%0%,
+          3.5%100%,
+          7%0%,
+          10.5%100%,
+          14%0%,
+          17.5%100%,
+          21%0%,
+          24.5%100%,
+          28%0%,
+          31.5%100%,
+          35%0%,
+          38.5%100%,
+          42%0%,
+          45.5%100%,
+          49%0%,
+          52.5%100%,
+          56%0%,
+          59.5%100%,
+          63%0%,
+          66.5%100%,
+          70%0%,
+          73.5%100%,
+          77%0%,
+          80.5%100%,
+          84%0%,
+          87.5%100%,
+          91%0%,
+          94.5%100%,
+          98%0%,
+          100%0%
+        );
+      }
+
+      /* sprinkles */
+      .sprinkle {
+        position: absolute;
+        width: 0.75vmin;
+        height: 0.4vmin;
+        border-radius: 0.3vmin;
+        opacity: 0.85;
+      }
+
+      /* ── CANDLES ── */
+      #candle-group {
+        position: absolute;
+        top: calc(-6.5vmin);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: flex-end;
+        gap: 1.6vmin;
+      }
+      .candle {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .candle-body {
+        width: 1.6vmin;
+        border-radius: 0.5vmin 0.5vmin 0.2vmin 0.2vmin;
+      }
+      .c1 .candle-body {
+        height: 4.8vmin;
+        background: linear-gradient(180deg, #ff6b9d, #c44569);
+      }
+      .c2 .candle-body {
+        height: 3.8vmin;
+        background: linear-gradient(180deg, #a29bfe, #6c5ce7);
+      }
+      .c3 .candle-body {
+        height: 5.5vmin;
+        background: linear-gradient(180deg, #55efc4, #00b894);
+      }
+      .c4 .candle-body {
+        height: 3.4vmin;
+        background: linear-gradient(180deg, #fdcb6e, #e17055);
+      }
+      .c5 .candle-body {
+        height: 4.4vmin;
+        background: linear-gradient(180deg, #74b9ff, #0984e3);
+      }
+      .wick {
+        width: 0.25vmin;
+        height: 1vmin;
+        background: #1a1a1a;
+        border-radius: 0.2vmin;
+      }
+
+      /* ── FLAME ── */
+      .flame-wrap {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s;
+      }
+      .flame-wrap.lit {
+        opacity: 1;
+      }
+      .flame-wrap.blown {
+        opacity: 0 !important;
+        transition: opacity 0.25s;
+      }
+
+      .flame {
+        width: 1.8vmin;
+        height: 3vmin;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #fff 0%,
+          #ffe066 25%,
+          #ffab00 55%,
+          #ff6a00 82%,
+          transparent 100%
+        );
+        border-radius: 50% 50% 30% 30% / 62% 62% 38% 38%;
+        animation:
+          flicker 0.11s infinite alternate,
+          sway 2.2s ease-in-out infinite alternate;
+        transform-origin: bottom center;
+        filter: blur(0.06vmin);
+        z-index: 2;
+        position: relative;
+      }
+      .flame-inner {
+        position: absolute;
+        bottom: 0.5vmin;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0.8vmin;
+        height: 1.5vmin;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #fff 0%,
+          #ffe8a0 60%,
+          transparent 100%
+        );
+        border-radius: 50% 50% 30% 30% / 62% 62% 38% 38%;
+        z-index: 3;
+        animation: flicker2 0.09s infinite alternate-reverse;
+      }
+      .flame-glow {
+        position: absolute;
+        bottom: -0.5vmin;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4vmin;
+        height: 4vmin;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 200, 50, 0.65) 0%,
+          transparent 70%
+        );
+        animation: flicker 0.14s infinite alternate;
+        z-index: 1;
+      }
+
+      @keyframes flicker {
+        from {
+          transform: translateX(-50%) scaleY(1) scaleX(1);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(-50%) scaleY(0.91) scaleX(1.07);
+          opacity: 0.87;
+        }
+      }
+      @keyframes flicker2 {
+        from {
+          transform: translateX(-50%) scaleY(1) scaleX(1);
+        }
+        to {
+          transform: translateX(-50%) scaleY(0.88) scaleX(1.05);
+        }
+      }
+      @keyframes sway {
+        from {
+          transform: rotate(-5deg);
+        }
+        to {
+          transform: rotate(5deg);
+        }
+      }
+
+      /* ── SPARKLES ── */
+      .sparkle {
+        position: absolute;
+        width: 0.6vmin;
+        height: 0.6vmin;
+        border-radius: 50%;
+        background: #ffe066;
+        pointer-events: none;
+        display: none;
+        animation: spk var(--sd) ease-out infinite;
+        opacity: 0;
+      }
+      @keyframes spk {
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) scale(0);
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--sx), var(--sy)) scale(1.6);
+        }
+      }
+
+      /* ══════════════════════════════════
+   UI ELEMENTS — also vmin-based
+══════════════════════════════════ */
+
+      /* ── LIGHTER ── */
+      #lighter-zone {
+        position: fixed;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1vmin;
+        cursor: pointer;
+        transition: opacity 0.5s;
+        /* Desktop & tablet: bottom-right corner */
+        bottom: clamp(20px, 5vh, 72px);
+        right: clamp(24px, 4vw, 72px);
+        padding: 2vmin 3vmin; /* generous tap target */
+      }
+      #lighter-zone.gone {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #hint {
+        color: rgba(255, 220, 100, 0.88);
+        font-size: clamp(10px, 1.6vmin, 14px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        animation: blink 1.5s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: translateY(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-0.5vmin);
+        }
+      }
+
+      #lighter {
+        position: relative;
+        width: clamp(32px, 5vmin, 56px);
+        height: clamp(58px, 9vmin, 100px);
+        transition: transform 0.15s;
+      }
+      #lighter:hover {
+        transform: scale(1.1) rotate(-5deg);
+      }
+      #lighter:active {
+        transform: scale(0.92) rotate(3deg);
+      }
+
+      .lb {
+        /* lighter body */
+        position: absolute;
+        bottom: 0;
+        left: 14%;
+        right: 14%;
+        top: 22%;
+        background: linear-gradient(
+          135deg,
+          #888 0%,
+          #ccc 30%,
+          #777 60%,
+          #aaa 100%
+        );
+        border-radius: 6px 6px 8px 8px;
+        box-shadow:
+          2px 2px 8px rgba(0, 0, 0, 0.72),
+          inset 1px 0 3px rgba(255, 255, 255, 0.28);
+      }
+      .lh {
+        /* lighter head */
+        position: absolute;
+        top: 0;
+        left: 18%;
+        right: 18%;
+        height: 24%;
+        background: linear-gradient(180deg, #999, #666);
+        border-radius: 4px 4px 0 0;
+      }
+      .lw {
+        /* lighter wheel */
+        position: absolute;
+        top: 36%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 54%;
+        height: 30%;
+        background: repeating-linear-gradient(
+          90deg,
+          #888 0,
+          #888 2px,
+          #bbb 2px,
+          #bbb 4px
+        );
+        border-radius: 2px;
+      }
+      .lf {
+        /* lighter flame */
+        position: absolute;
+        top: -18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 18px;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #fff 0%,
+          #ffe066 30%,
+          #ff6a00 80%,
+          transparent 100%
+        );
+        border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+        opacity: 0;
+        transition: opacity 0.3s;
+        animation: flicker 0.1s infinite alternate;
+      }
+      #lighter-zone:hover .lf,
+      #lighter-zone:active .lf {
+        opacity: 1;
+      }
+
+      /* ── BLOW UI ── */
+      #blow-ui {
+        position: fixed;
+        z-index: 50;
+        bottom: clamp(14px, 3.5vh, 52px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(5px, 1vmin, 12px);
+        width: min(88vw, 340px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.8s;
+      }
+      #blow-ui.on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #mic-icon {
+        font-size: clamp(22px, 4vmin, 38px);
+        animation: bounce 1.2s ease-in-out infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-0.7vmin);
+        }
+      }
+      #blow-lbl {
+        color: rgba(255, 220, 120, 0.92);
+        font-size: clamp(10px, 1.8vmin, 14px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        animation: blink 1.6s ease-in-out infinite;
+      }
+      #bar-wrap {
+        width: 100%;
+        height: clamp(8px, 1.4vmin, 14px);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 220, 100, 0.35);
+      }
+      #bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ffe066, #ff6a00);
+        border-radius: 6px;
+        transition: width 0.05s;
+      }
+
+      /* ── MIC PERMISSION BUTTON ── */
+      #mic-btn {
+        display: none;
+        position: fixed;
+        bottom: clamp(90px, 16vh, 140px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: clamp(9px, 1.6vmin, 13px) clamp(20px, 3.5vmin, 30px);
+        background: rgba(255, 220, 100, 0.14);
+        border: 1px solid rgba(255, 220, 100, 0.5);
+        color: #ffe066;
+        font-size: clamp(11px, 1.8vmin, 14px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 30px;
+        transition: background 0.3s;
+        z-index: 55;
+        white-space: nowrap;
+      }
+      #mic-btn:hover {
+        background: rgba(255, 220, 100, 0.26);
+      }
+      #mic-btn:active {
+        background: rgba(255, 220, 100, 0.38);
+      }
+
+      /* ── TITLE ── */
+      #title {
+        position: fixed;
+        top: clamp(12px, 3.5vh, 44px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Pinyon Script", cursive;
+        font-size: clamp(1.6rem, 5vmin, 5rem);
+        color: rgba(255, 220, 100, 0);
+        white-space: nowrap;
+        max-width: 92vw;
+        text-align: center;
+        transition:
+          color 1.5s,
+          text-shadow 1.5s;
+        z-index: 30;
+        pointer-events: none;
+      }
+      #title.on {
+        color: rgba(255, 220, 100, 0.92);
+        text-shadow:
+          0 0 3vmin rgba(255, 180, 50, 0.76),
+          0 0 6vmin rgba(255, 100, 30, 0.46);
+      }
+
+      /* ── SMOKE ── */
+      .smoke {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(210, 210, 210, 0.72);
+        pointer-events: none;
+        animation: smokeup 1.5s ease-out forwards;
+      }
+      @keyframes smokeup {
+        0% {
+          opacity: 0.72;
+          transform: translate(0, 0) scale(0.5);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--sx), -65px) scale(3.2);
+        }
+      }
+
+      /* ── CONFETTI CANVAS ── */
+      #cvs {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 60;
+      }
+
+      /* ── WISH ── */
+      #wish {
+        position: fixed;
+        inset: 0;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 70;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 1s;
+      }
+      #wish.on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #wish h1 {
+        font-family: "Pinyon Script", cursive;
+        font-size: clamp(2rem, 9vmin, 7rem);
+        color: #ffe066;
+        text-align: center;
+        text-shadow:
+          0 0 4vmin #ffab00,
+          0 0 8vmin #ff6a00;
+        animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        transform: scale(0);
+      }
+      #wish p {
+        margin-top: 1.5vmin;
+        font-size: clamp(10px, 2vmin, 16px);
+        letter-spacing: 3px;
+        color: rgba(255, 240, 180, 0.8);
+        text-transform: uppercase;
+        text-align: center;
+      }
+      @keyframes pop {
+        to {
+          transform: scale(1);
+        }
+      }
+
+      /* ── DARK OVERLAY ── */
+      #dark {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        opacity: 1;
+        transition: opacity 2s ease;
+        z-index: 100;
+        pointer-events: none;
+      }
+      #dark.fade {
+        opacity: 0;
+      }
+
+      /* ══════════════════════════════════
+   RESPONSIVE OVERRIDES
+   (vmin handles most things already,
+   these just tweak layout/position)
+══════════════════════════════════ */
+
+      /* Mobile ≤ 480px: lighter goes bottom-centre */
+      @media (max-width: 480px) {
+        #lighter-zone {
+          bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+          right: auto;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 14px 28px;
+        }
+        /* scene padding: table is slightly less tall on small phones */
+        #scene {
+          padding-bottom: 28vh;
+        }
+        #table {
+          height: 28vh;
+        }
+      }
+
+      /* Landscape phones – short height */
+      @media (max-height: 480px) {
+        #scene {
+          padding-bottom: 24vh;
+        }
+        #table {
+          height: 24vh;
+        }
+        #title {
+          top: 4px;
+          font-size: clamp(1rem, 4vmin, 1.8rem);
+        }
+        #blow-lbl {
+          display: none;
+        }
+        #blow-ui {
+          bottom: 4px;
+          gap: 3px;
+        }
+        #mic-btn {
+          bottom: 64px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dark"></div>
+    <canvas id="cvs"></canvas>
+
+    <div id="scene">
+      <div id="title">Happy Birthday! 🎂</div>
+      <div id="vig"></div>
+
+      <div id="cake-wrap">
+        <div id="spark-ring"></div>
+        <div id="cake">
+          <!-- Tier 3 (top) — candles here -->
+          <div id="tier3" class="tier">
+            <div class="frost"></div>
+            <div id="candle-group">
+              <div class="candle c1">
+                <div class="flame-wrap" id="fl1">
+                  <div class="flame-glow"></div>
+                  <div class="flame"></div>
+                  <div class="flame-inner"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="candle-body"></div>
+              </div>
+              <div class="candle c3">
+                <div class="flame-wrap" id="fl3">
+                  <div class="flame-glow"></div>
+                  <div class="flame"></div>
+                  <div class="flame-inner"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="candle-body"></div>
+              </div>
+              <div class="candle c2">
+                <div class="flame-wrap" id="fl2">
+                  <div class="flame-glow"></div>
+                  <div class="flame"></div>
+                  <div class="flame-inner"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="candle-body"></div>
+              </div>
+              <div class="candle c5">
+                <div class="flame-wrap" id="fl5">
+                  <div class="flame-glow"></div>
+                  <div class="flame"></div>
+                  <div class="flame-inner"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="candle-body"></div>
+              </div>
+              <div class="candle c4">
+                <div class="flame-wrap" id="fl4">
+                  <div class="flame-glow"></div>
+                  <div class="flame"></div>
+                  <div class="flame-inner"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="candle-body"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier 2 -->
+          <div id="tier2" class="tier"><div class="frost"></div></div>
+          <!-- Tier 1 (base) -->
+          <div id="tier1" class="tier"><div class="frost"></div></div>
+        </div>
+        <div id="plate"></div>
+      </div>
+    </div>
+
+    <div id="table"></div>
+
+    <!-- Lighter -->
+    <div id="lighter-zone">
+      <div id="hint">↑ Click to light</div>
+      <div id="lighter">
+        <div class="lh"><div class="lw"></div></div>
+        <div class="lb"></div>
+        <div class="lf"></div>
+      </div>
+    </div>
+
+    <!-- Blow UI -->
+    <div id="blow-ui">
+      <div id="mic-icon">🎤</div>
+      <div id="blow-lbl">🌬 Blow into the mic to make a wish!</div>
+      <div id="bar-wrap"><div id="bar"></div></div>
+    </div>
+
+    <button id="mic-btn" onclick="reqMic()">🎤 Allow Microphone</button>
+
+    <div id="wish">
+      <h1>Make a Wish! ✨</h1>
+      <p>Your wish has been sent to the stars</p>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const R = document.documentElement;
+      let _g = 0;
+
+      /* ── GLOW ── */
+      function sg(v) {
+        _g = v;
+        R.style.setProperty("--g", v);
+      }
+      function ag(from, to, ms) {
+        const t0 = performance.now();
+        (function s(now) {
+          const t = Math.min((now - t0) / ms, 1);
+          sg(from + (to - from) * t);
+          if (t < 1) requestAnimationFrame(s);
+        })(performance.now());
+      }
+
+      /* ── SPRINKLES ── */
+      const SC = [
+        "#ff6b9d",
+        "#a29bfe",
+        "#55efc4",
+        "#fdcb6e",
+        "#74b9ff",
+        "#ff7675",
+        "#00cec9",
+      ];
+      [
+        { id: "tier1", n: 16 },
+        { id: "tier2", n: 11 },
+        { id: "tier3", n: 7 },
+      ].forEach(({ id, n }) => {
+        const el = $(id);
+        for (let i = 0; i < n; i++) {
+          const s = document.createElement("div");
+          s.className = "sprinkle";
+          s.style.cssText = `top:${10 + Math.random() * 76}%;left:${5 + Math.random() * 88}%;background:${SC[~~(Math.random() * SC.length)]};transform:rotate(${Math.random() * 180}deg);`;
+          el.appendChild(s);
+        }
+      });
+
+      /* ── SPARKLE RING ── */
+      const ring = $("spark-ring");
+      for (let i = 0; i < 26; i++) {
+        const sp = document.createElement("div");
+        sp.className = "sparkle";
+        const a = Math.random() * 360,
+          r = 13 + Math.random() * 10; // in vmin
+        // translate values in vmin for consistent scale
+        sp.style.cssText = `left:50%;top:50%;--sx:${(Math.cos((a * Math.PI) / 180) * r).toFixed(1)}vmin;--sy:${(-(Math.sin((a * Math.PI) / 180) * r + 7)).toFixed(1)}vmin;--sd:${(1.4 + Math.random() * 2).toFixed(2)}s;animation-delay:${(Math.random() * 2).toFixed(2)}s;`;
+        ring.appendChild(sp);
+      }
+
+      /* ── INITIAL REVEAL ── */
+      setTimeout(() => $("dark").classList.add("fade"), 350);
+
+      /* ── LIGHTER ── */
+      let lit = false,
+        blown = false;
+      function onLight(e) {
+        if (e.type === "touchend") e.preventDefault();
+        if (lit || blown) return;
+        doLight();
+      }
+      $("lighter-zone").addEventListener("click", onLight);
+      $("lighter-zone").addEventListener("touchend", onLight);
+
+      function doLight() {
+        lit = true;
+        $("lighter-zone").classList.add("gone");
+        const ORDER = ["fl1", "fl3", "fl2", "fl5", "fl4"];
+        ORDER.forEach((id, i) =>
+          setTimeout(() => {
+            $(id).classList.add("lit");
+            ag(_g, (i + 1) / ORDER.length, 540);
+          }, i * 270),
+        );
+        setTimeout(
+          () => {
+            $("title").classList.add("on");
+            document
+              .querySelectorAll(".sparkle")
+              .forEach((s) => (s.style.display = "block"));
+            setTimeout(initMic, 800);
+          },
+          ORDER.length * 270 + 400,
+        );
+      }
+
+      /* ── MIC ── */
+      let audioCtx, analyser, micStream;
+
+      async function initMic() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: false,
+          });
+          micStream = stream;
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 512;
+          audioCtx.createMediaStreamSource(stream).connect(analyser);
+          $("blow-ui").classList.add("on");
+          watchBlow();
+        } catch (e) {
+          $("mic-btn").style.display = "block";
+          $("blow-ui").classList.add("on");
+        }
+      }
+      function reqMic() {
+        $("mic-btn").style.display = "none";
+        initMic();
+      }
+
+      const barEl = $("bar");
+      const THRESH = 0.16;
+      let hold = 0;
+      const NEED = 20;
+
+      function watchBlow() {
+        if (blown) return;
+        const d = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteTimeDomainData(d);
+        let s = 0;
+        for (let i = 0; i < d.length; i++) {
+          const v = (d[i] - 128) / 128;
+          s += v * v;
+        }
+        const rms = Math.sqrt(s / d.length);
+        barEl.style.width = Math.min(rms / THRESH, 1) * 100 + "%";
+        if (rms > THRESH) {
+          if (++hold >= NEED) {
+            doBlow();
+            return;
+          }
+        } else {
+          hold = Math.max(0, hold - 2);
+        }
+        requestAnimationFrame(watchBlow);
+      }
+
+      /* ── BLOW OUT ── */
+      function doBlow() {
+        if (blown) return;
+        blown = true;
+        $("blow-ui").classList.remove("on");
+        ["fl1", "fl2", "fl3", "fl4", "fl5"].forEach((id, i) =>
+          setTimeout(
+            () => {
+              $(id).classList.add("blown");
+              smoke($(id));
+            },
+            i * 75 + Math.random() * 55,
+          ),
+        );
+        setTimeout(() => {
+          ag(_g, 0.06, 1100);
+          document
+            .querySelectorAll(".sparkle")
+            .forEach((s) => (s.style.display = "none"));
+        }, 460);
+        setTimeout(celebrate, 850);
+        if (micStream) micStream.getTracks().forEach((t) => t.stop());
+      }
+
+      function smoke(el) {
+        const r = el.getBoundingClientRect();
+        for (let i = 0; i < 5; i++) {
+          const sm = document.createElement("div");
+          sm.className = "smoke";
+          sm.style.cssText = `left:${r.left + r.width / 2 - 4}px;top:${r.top + 4}px;--sx:${((Math.random() - 0.5) * 28).toFixed(1)}px;`;
+          document.body.appendChild(sm);
+          setTimeout(() => sm.remove(), 1600);
+        }
+      }
+
+      /* ── CONFETTI ── */
+      const canvas = $("cvs"),
+        ctx = canvas.getContext("2d");
+      function rsz() {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+      }
+      rsz();
+      window.addEventListener("resize", rsz);
+
+      const PC = [
+        "#ff6b9d",
+        "#a29bfe",
+        "#55efc4",
+        "#fdcb6e",
+        "#74b9ff",
+        "#ff7675",
+        "#ffe066",
+        "#00cec9",
+        "#e17055",
+      ];
+      class P {
+        constructor(rY) {
+          this.reset(rY);
+        }
+        reset(rY) {
+          this.x = Math.random() * canvas.width;
+          this.y = rY ? Math.random() * canvas.height : -16;
+          this.sz = 4 + Math.random() * 8;
+          this.vy = 1.8 + Math.random() * 4;
+          this.vx = (Math.random() - 0.5) * 3;
+          this.rot = Math.random() * 360;
+          this.rs = (Math.random() - 0.5) * 8;
+          this.c = PC[~~(Math.random() * PC.length)];
+          this.rect = Math.random() > 0.4;
+        }
+        step() {
+          this.y += this.vy;
+          this.x += this.vx + Math.sin(this.y * 0.03) * 0.8;
+          this.rot += this.rs;
+          if (this.y > canvas.height + 16) this.reset(false);
+        }
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate((this.rot * Math.PI) / 180);
+          ctx.fillStyle = this.c;
+          if (this.rect)
+            ctx.fillRect(-this.sz / 2, -this.sz / 4, this.sz, this.sz / 2);
+          else {
+            ctx.beginPath();
+            ctx.arc(0, 0, this.sz / 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+      }
+
+      let pts = [],
+        pf = 0,
+        going = false;
+      function celebrate() {
+        const n = innerWidth <= 480 ? 90 : innerWidth <= 1024 ? 150 : 240;
+        for (let i = 0; i < n; i++) pts.push(new P(true));
+        $("wish").classList.add("on");
+        ag(_g, 0.52, 1400);
+        if (!going) {
+          going = true;
+          run();
+        }
+        setTimeout(() => $("wish").classList.remove("on"), 5500);
+      }
+      function run() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pts.forEach((p) => {
+          p.step();
+          p.draw();
+        });
+        pf++;
+        if (pf > 400 && pts.length) pts.splice(0, 2);
+        if (pts.length || pf < 500) requestAnimationFrame(run);
+        else going = false;
+      }
+    </script>
+  </body>
+</html>
