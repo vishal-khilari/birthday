@@ -868,6 +868,8 @@
 
     <button id="mic-btn" onclick="reqMic()">🎤 Allow Microphone</button>
 
+    <audio id="bday-audio" src="birthday_final.mp3" preload="auto"></audio>
+
     <div id="wish">
       <h1>Make a Wish! ✨</h1>
       <p>Your wish has been sent to the stars</p>
@@ -964,6 +966,10 @@
             document
               .querySelectorAll(".sparkle")
               .forEach((s) => (s.style.display = "block"));
+            // Play birthday music 🎵
+            const audio = $("bday-audio");
+            audio.currentTime = 0;
+            audio.play().catch(() => {}); // catch needed for browser autoplay policy
             setTimeout(initMic, 800);
           },
           ORDER.length * 270 + 400,
